@@ -18,41 +18,20 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 const uri = process.env.ATLAS_URI; //mondodbatlas dashboard database
-mongoose.connect(uri, { useNewUrlParser: true }); //flags
+mongoose.connect(uri, { useNewUrlParser: true,
+  useUnifiedTopology: true, }); //flags
 const connection = mongoose.connection;
 connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
 });
 
 //connection to routes
-const BooksRouter = require("./routes/book.js");
-// const membersRouter = require("./routes/member.js");
-const membersRouter = require("./routes/members.js");
-const requestsRouter = require("./routes/request.js");
+const recipeRouter = require("./routes/recipe.js");
+app.use("/recipes", recipeRouter);
 
 
-app.use("/members", membersRouter);
-
-app.use("/books", BooksRouter);
-app.use("/requests", requestsRouter);
-
-app.get("/requests", function(req,res){
-  var queryparameter = req.query;
-  console.log(queryparameter.status)
-  res.json(queryparameter)
-})
 // app.use("/members", membersRouter);
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
-
-
-// const express = require("express");
-// const app = express();
-
-// app.get("/", function (req, res) {
-//   res.send("WORKING!!!");
-// });
-
-// app.listen(process.env.PORT || 1500);
